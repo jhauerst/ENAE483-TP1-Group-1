@@ -19,20 +19,30 @@ hold on
 grid on
 plot(chi_array, M01_array)
 plot(chi_array,M01_array+M02_array)
-legend 
+legend ('M02', 'M01', 'M0')
 hold off
-
+title('Total Masses vs. Chi')
+ylabel('Mass (kg)')
+xlabel('Chi')
+%% Functions
 %Get propellant mass
 [m_pr1, m_pr2] = propmass(delta,M01_array,M02_array, m_pl);
 figure(2)
 subplot(2,1,1)
 plot(M01_array,m_pr1)
 grid on
+title('M01 vs. M_pr1')
+ylabel('Mass (kg)')
+xlabel('Mass (kg)')
 subplot(2,1,2)
 plot(M02_array,m_pr2)
+title('M02 vs. M_pr2')
+ylabel('Mass (kg)')
+xlabel('Mass (kg)')
 grid on
 
 
+%Get initial masses of M01 & M02
 function [M01_array, M02_array, chi_array] = getmass(delta_v,m_pl,delta,chi,Isp1,Isp2)
     syms M02 M01
     M02_array = [];
