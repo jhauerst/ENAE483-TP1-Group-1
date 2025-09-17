@@ -1,7 +1,3 @@
-function [minCost] = findMinCost(costs)
-    minCost=zeros(1,length(costs));
-    for k = 1:length(costs)
-        [c,I]=min((costs(k)));
-        minCost(k)=[c,I]
-    end
+function [cost, index] = findMinCost(costs)
+    [cost,index]=min((costs(k)));
 end
