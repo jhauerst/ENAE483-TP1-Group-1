@@ -11,7 +11,7 @@ Isp1 = 366; %s (for LOX/LH2)
 Isp2 = 366; %s (for LOX/LH2)
 % Equations 
 
-[M01_array, M02_array, chi_array] = getmass(delta_v,m_pl,delta,chi,Isp1,Isp2);
+[M01_array, M02_array, chi_array] = getMass(delta_v,m_pl,delta,chi,Isp1,Isp2);
 
 figure (1)
 plot(chi_array, M02_array)
@@ -26,7 +26,7 @@ ylabel('Mass (kg)')
 xlabel('Chi')
 
 
-[m_pr1, m_pr2] = propmass(delta,M01_array,M02_array, m_pl);
+[m_pr1, m_pr2] = propMass(delta,M01_array,M02_array, m_pl);
 figure(2)
 subplot(2,1,1)
 plot(M01_array,m_pr1)
