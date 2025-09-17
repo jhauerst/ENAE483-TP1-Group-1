@@ -1,3 +1,3 @@
 function [cost, index] = findMinCost(costs)
-    [cost,index]=min((costs(k)));
+    [cost,index]=min(costs);
 end
