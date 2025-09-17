@@ -1,5 +1,5 @@
 %Get propellant mass
-function [m_pr1, m_pr2] = propmass(delta,M01,M02, m_pl)
+function [m_pr1, m_pr2] = propMass(delta,M01,M02, m_pl)
     m_pr1 =[];
     m_pr2 = [];
     for k = 1:length(M01)

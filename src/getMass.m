@@ -1,5 +1,5 @@
 %Get initial masses of M01 & M02
-function [M01_array, M02_array, chi_array] = getmass(delta_v,m_pl,delta,chi,Isp1,Isp2)
+function [M01_array, M02_array, chi_array] = getMass(delta_v,m_pl,delta,chi,Isp1,Isp2)
     syms M02 M01
     M02_array = [];
     M01_array = [];
