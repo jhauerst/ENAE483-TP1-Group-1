@@ -97,6 +97,34 @@ xlabel('Chi')
 
 
 [m_pr1, m_pr2] = propMass(delta,M01_array,M02_array, m_pl);
+
+%finding cost of the minimum mass 
+[m_in1,m_in2]=inertMass(delta, M01_array(index).*1000, M02_array(index).*1000);
+minmasscost1=stageCost(m_in1);
+minmasscost2=stageCost(m_in2);
+LVcost_min=minmasscost2+minmasscost1
+
+%finding minimum cost
+[costm_in1,costm_in2]=inertMass(delta, M01_array.*1000, M02_array.*1000);
+mass1cost=stageCost(costm_in1);
+mass2cost=stageCost(costm_in2);
+totalmasscost=mass1cost+mass2cost;
+[mincost,cindex]=findMinCost(totalmasscost)
+
+figure (2)
+plot(chi_array(cindex-l:cindex+l), mass1cost(cindex-l:cindex+l))
+hold on
+grid on
+plot(chi_array(cindex-l:cindex+l), mass2cost(cindex-l:cindex+l))
+plot(chi_array(cindex-l:cindex+l),totalmasscost(cindex-l:cindex+l))
+plot(chi_array(cindex),mincost,'o')
+legend ('stage 2 cost', 'stage 1 cost', 'total cost')
+hold off
+title('Solid & LOX/LH2')
+ylabel('Cost (millions)')
+xlabel('Chi')
+
+mincostmass=Mos(cindex)
 %% Solid & LOX/RP1
 close all;
 clear;
@@ -132,6 +160,34 @@ xlabel('Chi')
 
 
 [m_pr1, m_pr2] = propMass(delta,M01_array,M02_array, m_pl);
+
+%finding cost of the minimum mass 
+[m_in1,m_in2]=inertMass(delta, M01_array(index).*1000, M02_array(index).*1000);
+minmasscost1=stageCost(m_in1);
+minmasscost2=stageCost(m_in2);
+LVcost_min=minmasscost2+minmasscost1
+
+%finding minimum cost
+[costm_in1,costm_in2]=inertMass(delta, M01_array.*1000, M02_array.*1000);
+mass1cost=stageCost(costm_in1);
+mass2cost=stageCost(costm_in2);
+totalmasscost=mass1cost+mass2cost;
+[mincost,cindex]=findMinCost(totalmasscost)
+
+figure (2)
+plot(chi_array(cindex-l:cindex+l), mass1cost(cindex-l:cindex+l))
+hold on
+grid on
+plot(chi_array(cindex-l:cindex+l), mass2cost(cindex-l:cindex+l))
+plot(chi_array(cindex-l:cindex+l),totalmasscost(cindex-l:cindex+l))
+plot(chi_array(cindex),mincost,'o')
+legend ('stage 2 cost', 'stage 1 cost', 'total cost')
+hold off
+title('Solid & LOX/RP1')
+ylabel('Cost (millions)')
+xlabel('Chi')
+
+mincostmass=Mos(cindex)
 %% Solid & Solid
 close all;
 clear;
@@ -167,6 +223,34 @@ xlabel('Chi')
 
 
 [m_pr1, m_pr2] = propMass(delta,M01_array,M02_array, m_pl);
+
+%finding cost of the minimum mass 
+[m_in1,m_in2]=inertMass(delta, M01_array(index).*1000, M02_array(index).*1000);
+minmasscost1=stageCost(m_in1);
+minmasscost2=stageCost(m_in2);
+LVcost_min=minmasscost2+minmasscost1
+
+%finding minimum cost
+[costm_in1,costm_in2]=inertMass(delta, M01_array.*1000, M02_array.*1000);
+mass1cost=stageCost(costm_in1);
+mass2cost=stageCost(costm_in2);
+totalmasscost=mass1cost+mass2cost;
+[mincost,cindex]=findMinCost(totalmasscost)
+
+figure (2)
+plot(chi_array(cindex-l:cindex+l), mass1cost(cindex-l:cindex+l))
+hold on
+grid on
+plot(chi_array(cindex-l:cindex+l), mass2cost(cindex-l:cindex+l))
+plot(chi_array(cindex-l:cindex+l),totalmasscost(cindex-l:cindex+l))
+plot(chi_array(cindex),mincost,'o')
+legend ('stage 2 cost', 'stage 1 cost', 'total cost')
+hold off
+title('Solid & Solid')
+ylabel('Cost (millions)')
+xlabel('Chi')
+
+mincostmass=Mos(cindex)
 %% Solid & Storables
 close all;
 clear;
@@ -202,3 +286,31 @@ xlabel('Chi')
 
 
 [m_pr1, m_pr2] = propMass(delta,M01_array,M02_array, m_pl);
+
+%finding cost of the minimum mass 
+[m_in1,m_in2]=inertMass(delta, M01_array(index).*1000, M02_array(index).*1000);
+minmasscost1=stageCost(m_in1);
+minmasscost2=stageCost(m_in2);
+LVcost_min=minmasscost2+minmasscost1
+
+%finding minimum cost
+[costm_in1,costm_in2]=inertMass(delta, M01_array.*1000, M02_array.*1000);
+mass1cost=stageCost(costm_in1);
+mass2cost=stageCost(costm_in2);
+totalmasscost=mass1cost+mass2cost;
+[mincost,cindex]=findMinCost(totalmasscost)
+
+figure (2)
+plot(chi_array(cindex-l:cindex+l), mass1cost(cindex-l:cindex+l))
+hold on
+grid on
+plot(chi_array(cindex-l:cindex+l), mass2cost(cindex-l:cindex+l))
+plot(chi_array(cindex-l:cindex+l),totalmasscost(cindex-l:cindex+l))
+plot(chi_array(cindex),mincost,'o')
+legend ('stage 2 cost', 'stage 1 cost', 'total cost')
+hold off
+title('Solid & Storables')
+ylabel('Cost (millions)')
+xlabel('Chi')
+
+mincostmass=Mos(cindex)
