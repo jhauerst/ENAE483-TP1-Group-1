@@ -1,5 +1,3 @@
-% Section 1.2, Joseph Hauerstein
-
 close all;
 clear;
 clc;
