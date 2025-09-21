@@ -1,3 +1,10 @@
-# add files to be ignored by git here
+# Apple
 *.DS_STORE
+
+# MATLAB
 *.asv
+
+# LaTeX
+*.aux
+*.log
+*.synctex.gz
