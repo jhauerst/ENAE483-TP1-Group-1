@@ -1,4 +1,4 @@
-% Submission 1 Template, Group 1
+% Section 1.2, Joseph Hauerstein
 
 close all;
 clear;
@@ -8,10 +8,10 @@ delta_v = 12.3; % km/s
 m_pl = 26000; % kg
 delta = 0.08; % Inert mass fraction for both stages
 chi = 0.2:0.01:0.8; %array
-Isp1 = 327; % s, 1st stage, LOX/CH4
+Isp1 = 366; % s, 1st stage, LOX/CH4
 %       LOX/CH4 LOX/LH2 LOX/RP1 Solid   Storables
 Isp2 = [327,    366,    311,    269,    285]; % s, 2nd stage
-stage1Prop = "LOX/CH_4";
+stage1Prop = "LOX/H_2";
 stage2Prop = ["LOX/CH_4", "LOX/LH_2", "LOX/RP1", "Solid", "Storables"];
 
 
