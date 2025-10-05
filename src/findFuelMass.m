@@ -1,5 +1,8 @@
 %% Oxidizer/fuel Mass finder
 function [oxidizer_mass, fuel_mass] = findFuelMass(Mpr0, ratio_array)
+    %Mpr0 = total propellant mass per stage
+    %ratio_array(1) = fuel fraction
+    %ratio_array(2) = oxidizer fraction
     tot_ratio = ratio_array(1) + ratio_array(2);
     oxz_ratio = ratio_array(1)/tot_ratio;
     ful_ratio = ratio_array(2)/tot_ratio;
