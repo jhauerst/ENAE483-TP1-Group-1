@@ -1,0 +1,34 @@
+function [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min] = submission1 (delta, Propellantstage1, Propellantstage2)
+% Givens
+delta_v = 12.3; % km/s
+m_pl = 26000; % kg
+chi = 0.2:0.01:0.8; % array
+Isp = [327,    366,    311,    269,    285]; 
+propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP-1" "Solid" "Storables"];
+for i = 1:length(propNames)
+    if strcmp(Propellantstage1, propNames(i))
+         Isp1 = Isp(i);
+    end
+     if strcmp(Propellantstage2, propNames(i))
+         Isp2 = Isp(i);
+    end
+end
+    [M01_array, M02_array, ~] = getMass(delta_v,m_pl,delta,chi,Isp1,Isp2);
+    [m_pr1, m_pr2] = propMass(delta, M01_array, M02_array, m_pl);
+    [m_in1, m_in2] = inertMass(delta, M01_array, M02_array);
+    Mo = M01_array + M02_array;
+    costS1 = stageCost(m_in1);
+    costS2 = stageCost(m_in2);
+    costTotal = costS1 + costS2;
+    [~, cIndex] = findMinCost(costTotal);
+    
+    Mo_min= Mo(cIndex);
+    Min1_min = m_in1(cIndex);
+    Min2_min = m_in2(cIndex);
+    Mo1_min = M01_array(cIndex);
+    Mo2_min = M02_array(cIndex);
+    Mpr1_min = m_pr1(cIndex);
+    Mpr2_min = m_pr2(cIndex);
+    
+end
+end
