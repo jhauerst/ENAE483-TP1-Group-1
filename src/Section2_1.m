@@ -55,7 +55,8 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
 
    % get all the masses
 
-
+mass_margin
+vehicle_inertMass2
 end
 
 
