@@ -34,7 +34,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
             [h_total] = findTankHeight(Mpr0(i),radius, Propellants(i));  % new height based on new radius
             L = height;
             D = radius*2;
-                if L/D > 13 && radius < previous_radius % if condition not met then skip to the next iteration
+                if L/D > 13 && radius < previous_radius && radius < 5.3 % if condition not met then skip to the next iteration
                     continue
                 end    
     
