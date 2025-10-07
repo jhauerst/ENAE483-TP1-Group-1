@@ -8,19 +8,18 @@
 %Names = [1:stage 1 fuel name, 2:stage 1 oxidizer name, 3:stage 1 propellant name
 %         4:stage 2 fuel name, 5:stage 2 oxidizer name, 6:stage 2 propellant name]
 
-function [InertMass]=totalInertMass(stage1,stage2,propellantname,M0,h,i)
+function [InertMass, i, propellant_names]=totalInertMass(stage1,stage2,propellantname,M0,h,i)
   big_names_array = ["LOX", "LCH4", "LOX/LCH4"; "LOX", "LH2", "LOX/LH2"; "LOX", "RP1", "LOX/RP1"; "Solid", "", "Solid"; "Storables", "", "Storables"];
   startingIndex = 1;
   if i == 2
       startingIndex = 4;
   end
   names = ["","","","","",""];
-  names(startingIndex : startingIndex+2);
-big_names_array(big_names_array(:,3) == propellantname,:);
   names(startingIndex : startingIndex+2) = big_names_array(big_names_array(:,3) == propellantname,:);
     %% Stage one
   if i == 1
     if strcmp(names(3),"Solid")
+        propellant_names = "Solid";
         %Fairing for solid propellants on first stage is Aft & Interstage fairing
         [~, ~ ,~ , Interstage, Aft1] = findFairingMass(stage1(2),stage2(2),h);
         %Propellant mass = solid fuel
@@ -36,8 +35,10 @@ big_names_array(big_names_array(:,3) == propellantname,:);
         [engineMass1, structureMass1, gimbalsMass1] = stageEngineMass(stage1(10), stage1(5), stage1(11), names(3), stage1(12), 1);
         [~,avionicsMass1] = findWiringa_AvionicsMass(M0,stage2(1));
         [wiringMass1,~] = findWiringa_AvionicsMass(M0,stage1(1));
-        totalMass1 = Interstage+Aft1+propellantTank+insul_solid+engineMass1+structureMass1+gimbalsMass1+wiringMass1+avionicsMass1;
+%         totalMass1 = Interstage+Aft1+propellantTank+insul_solid+engineMass1+structureMass1+gimbalsMass1+wiringMass1+avionicsMass1;
+        totalMass1 = [Interstage Aft1 propellantTank insul_solid engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1];
     else 
+        propellant_names = "else";
         [~, Intertank1 ,~ , Interstage, Aft1] = findFairingMass(stage1(2),stage2(2),h);
         %Fuel mass & Oxidizer masses
         %Pass propellant mass and ratio
@@ -58,13 +59,14 @@ big_names_array(big_names_array(:,3) == propellantname,:);
         %find Wiring mass
         [~,avionicsMass1] = findWiringa_AvionicsMass(M0,stage2(1));
         [wiringMass1,~] = findWiringa_AvionicsMass(M0,stage1(1));
-        totalMass1 = Intertank1+Interstage+Aft1+fuel_tank1+oxidizer_tank1+insul_oxid1+insul_fuel1+engineMass1+structureMass1+gimbalsMass1+wiringMass1+avionicsMass1 ;
+        totalMass1 = [Intertank1 Interstage Aft1 fuel_tank1 oxidizer_tank1 insul_oxid1 insul_fuel1 engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1 ];
     end 
     InertMass = totalMass1;
   end
     %% Stage two
 if i == 2
     if strcmp(names(6),"Solid")
+        propellant_names = "Solid";
         %Fairing for solid propellants on second stage is payload fairing
         [Payload2, ~ ,~ , ~, ~] = findFairingMass(0,stage2(2),h)
         %Propellant mass = solid fuel
@@ -81,8 +83,9 @@ if i == 2
      
         [wiringMass2,~] = findWiringa_AvionicsMass(stage2(10),(stage2(1)+13+h))
         %height = 2nd stage height + payload fairing height
-        totalMass2 = Payload2+propellantTank2+insul_solid2+engineMass2+structureMass2+gimbalsMass2+wiringMass2;
+        totalMass2 = [Payload2 propellantTank2 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
     else 
+        propellant_names = "else";
         %Fairing mass
         [payload2, ~, Intertank2, ~, ~] = findFairingMass(0,stage2(2),h);
         %Fuel mass & Oxidizer masses
@@ -103,7 +106,7 @@ if i == 2
         [engineMass2, structureMass2, gimbalsMass2] = stageEngineMass(stage2(10), stage2(5), stage2(11), names(6), stage2(12), 2);
         %find Wiring mass and avionics
         [wiringMass2,~] = findWiringa_AvionicsMass(stage2(10),(stage2(1)+13+h));
-        totalMass2 = payload2+Intertank2+fuel_tank2+oxidizer_tank2+insul_oxid2+insul_fuel2+engineMass2+structureMass2+gimbalsMass2+wiringMass2;
+        totalMass2 = [payload2 Intertank2 fuel_tank2 oxidizer_tank2 insul_oxid2 insul_fuel2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
       
     end
     InertMass = totalMass2;

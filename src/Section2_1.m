@@ -1,4 +1,11 @@
 %% Main Section Code for 2.1
+
+% Array guide for subsystem masses: 
+% 1 --> if i = 1 , propellant_name = "Solid" : totalMass1 = [Interstage Aft1 propellantTank insul_solid engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1];
+% 2 --> if i = 1 , propellant_name = "else" : totalMass1 = [Intertank1 Interstage Aft1 fuel_tank1 oxidizer_tank1 insul_oxid1 insul_fuel1 engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1 ];
+% 3 --> if i = 2 , propellant_name = "Solid" : totalMass2 = [Payload2 propellantTank2 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
+% 4 --> if i = 2 , propellant_name = "else" : totalMass2 = [payload2 Intertank2 fuel_tank2 oxidizer_tank2 insul_oxid2 insul_fuel2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
+
 clear; clc; close all;
 propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
 Propellantstage1 = "LOX/LH2"; % user changed
@@ -60,7 +67,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
                 stage2_array = previous_stage;
             end
            
-            [InertMass] = totalInertMass(stage1_array,stage2_array,Propellants(stage),m0(stage),h,stage);
+            [InertMass, stage, propellant_names] = totalInertMass(stage1_array,stage2_array,Propellants(stage),m0(stage),h,stage);
             currentInertMass = InertMass;  
              
                 if currentInertMass < minInertmass   % check for new minimum inert mass
@@ -81,9 +88,13 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
    end % end of while loop 
 
    % get all the masses
+[minInertMass, i, propellant_names] = totalInertMass(minStageArray,stage2_array,Propellants(stage),m0(stage),h,stage);
 
-mass_margin
-vehicle_inertMass2
+% rerun the functions
+% need to output individual subsystems and corresponding stage 1
+% output individual subsystems and corresponding stage 2
+% total LV mass sums
+
 end
 
 
