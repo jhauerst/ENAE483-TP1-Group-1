@@ -15,8 +15,8 @@ function [InertMass]=totalInertMass(stage1,stage2,propellantname,M0,h,i)
       startingIndex = 4;
   end
   names = ["","","","","",""];
-  names(startingIndex : startingIndex+2)
-big_names_array(big_names_array(:,3) == propellantname,:)
+  names(startingIndex : startingIndex+2);
+big_names_array(big_names_array(:,3) == propellantname,:);
   names(startingIndex : startingIndex+2) = big_names_array(big_names_array(:,3) == propellantname,:);
     %% Stage one
   if i == 1

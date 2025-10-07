@@ -1,7 +1,7 @@
 %% Main Section Code for 2.1
 clear; clc; close all;
 propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
-Propellantstage1 = "Solid"; % user changed
+Propellantstage1 = "LOX/LH2"; % user changed
 
 h = 4; % meters, we decided as a team vote
 chi1 = 0.54 ; % min mass soln
@@ -20,7 +20,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         firstIteration = false;
        end
 
-    Propellants = [Propellantstage1, propNames(k)];     % user's specific propellant combination
+    Propellants = [Propellantstage1, propNames(k)]     % user's specific propellant combination
     [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min] = submission1 (delta, Propellantstage1, propNames(k)); % Grab submission 1 masses
     vehicle_inertMass1 = Min1_min + Min2_min;
     m0 = [Mo_min, Mo2_min];     % stage 1 and 2 array
