@@ -42,4 +42,5 @@ elseif nEngines == 20
     radius_ofthrust = radius*5.122;
 else
     disp("Error: Too many engines")
+    radius_ofthrust = 0;
 end

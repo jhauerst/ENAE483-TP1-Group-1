@@ -32,7 +32,7 @@ function [engineMass, structureMass, gimbalsMass] = stageEngineMass(m0, mProp, T
     end
     T_total = TWR * m0 * g;%Total thrust (N)
     structureMass = 2.55*10^-4*T_total;%overall structure mass
-    gimbalsMass = nEngine(237.8*(TPerEngine/P0)^0.9375);%Gimbal mass per engine
+    gimbalsMass = nEngine*(237.8*(TPerEngine/P0)^0.9375);%Gimbal mass per engine
 
     if strcmp(type, "LOX/LH2") || strcmp(type, "LOX/LCH4") || strcmp(type, "LOX/RP1") || strcmp(type, "Storables")
         engineMass = 7.81*10^-4*TPerEngine + 3.37*10^-5*TPerEngine*sqrt(expanRatio) + 59;% Engine mass

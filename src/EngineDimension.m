@@ -1,5 +1,5 @@
 function [nEngines, diameter_ofthrust] = EngineDimension(stage,m0,prop) % type of propellant
-    propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP-1" "Solid" "Storables"];   
+    propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];   
     i = find(propNames==prop) ;    
     g = 9.81;
     TWR = [1.3 0.76];

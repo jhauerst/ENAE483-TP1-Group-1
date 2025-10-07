@@ -4,7 +4,7 @@ delta_v = 12.3; % km/s
 m_pl = 26000; % kg
 chi = 0.2:0.01:0.8; % array
 Isp = [327,    366,    311,    269,    285]; 
-propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP-1" "Solid" "Storables"];
+propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
 for i = 1:length(propNames)
     if strcmp(Propellantstage1, propNames(i))
          Isp1 = Isp(i);
@@ -30,5 +30,4 @@ end
     Mpr1_min = m_pr1(cIndex);
     Mpr2_min = m_pr2(cIndex);
     
-end
 end
