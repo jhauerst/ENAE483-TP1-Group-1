@@ -37,6 +37,10 @@ heights = [];
         heights(end+1) = h;
         h_total = h+h_total;
     end
+    if Propellant == "Solid"
+        ratio = [0 1];
+        rho = [0 density(5)];
+    end
     if (length(heights) == 2)
         oxidizer_height = heights(1);
         fuel_height = heights(2);

@@ -23,6 +23,8 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
     Propellants = [Propellantstage1, propNames(k)]     % user's specific propellant combination
     [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min] = submission1 (delta, Propellantstage1, propNames(k)); % Grab submission 1 masses
     vehicle_inertMass1 = Min1_min + Min2_min;
+    Mo_min;
+    Mo2_min;
     m0 = [Mo_min, Mo2_min];     % stage 1 and 2 array
     Mpr0 = [Mpr1_min Mpr2_min]; % stage 1 and 2 array
     thrust_weight_ratio = [1.3 0.76];
@@ -31,9 +33,12 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         stage = i;
         [nEngines, diameter_ofthrust] = EngineDimension(stage, m0(stage), Propellants(stage));  % find number of engines and diameter of all those engines
         radius = diameter_ofthrust/2;
+ 
         [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(stage));     % function to find height of tank
         min_radius = Inf;   % intializing variable, high number
         minInertmass = Inf; % intializing variable, high number
+        minstageArray = Inf;
+        minEngines = Inf;
             while radius < height  % constraint
             radius = radius + 0.1; % keep increasing radius until constraint is met
             [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(i));  % new height based on new radius
@@ -54,6 +59,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
                 stage1_array = stageArray;
                 stage2_array = previous_stage;
             end
+           
             [InertMass] = totalInertMass(stage1_array,stage2_array,Propellants(stage),m0(stage),h,stage);
             currentInertMass = InertMass;  
              
@@ -61,11 +67,14 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
                 min_radius = radius;                 % new minimum radius
                 min_height = height;                 % new minimum height
                 minInertmass = currentInertMass;     % new minimum inert mass
+                minstageArray = stageArray;
+                minEngines = nEngines;
                 end
             end
         previous_radius = min_radius;       % update the previous radius
-        vehicle_inertMass2 = minInertmass + InertMass;      % add the inert masses
-        previous_stage = stageArray;
+        vehicle_inertMass2 = minInertmass + vehicle_inertMass2;      % add the inert masses
+        previous_stage = minstageArray;
+        minEngines
         end
 
     mass_margin = (vehicle_inertMass1 - vehicle_inertMass2)/(vehicle_inertMass2);  % calculate the mass margin

@@ -22,7 +22,7 @@ end
     costTotal = costS1 + costS2;
     [~, cIndex] = findMinCost(costTotal);
     
-    Mo_min= Mo(cIndex);
+    Mo_min = Mo(cIndex);
     Min1_min = m_in1(cIndex);
     Min2_min = m_in2(cIndex);
     Mo1_min = M01_array(cIndex);
