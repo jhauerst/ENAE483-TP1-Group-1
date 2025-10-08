@@ -11,14 +11,14 @@
 function [InertMass]=totalInertMass(stage1,stage2,propellantname,M0,h,i)
   big_names_array = ["LOX", "LCH4", "LOX/LCH4"; "LOX", "LH2", "LOX/LH2"; "LOX", "RP1", "LOX/RP1"; "Solid", "", "Solid"; "Storables", "", "Storables"];
   startingIndex = 1;
-  if i == 2
-      startingIndex = 4;
-  end
+    if i == 2
+        startingIndex = 4;
+    end
   names = ["","","","","",""];
   names(startingIndex : startingIndex+2);
-big_names_array(big_names_array(:,3) == propellantname,:);
+  big_names_array(big_names_array(:,3) == propellantname,:);
   names(startingIndex : startingIndex+2) = big_names_array(big_names_array(:,3) == propellantname,:);
-    %% Stage one
+%% Stage one
   if i == 1
     if strcmp(names(3),"Solid")
         %Fairing for solid propellants on first stage is Aft & Interstage fairing

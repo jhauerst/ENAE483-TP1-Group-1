@@ -1,13 +1,14 @@
 %% Main Section Code for 2.1
 clear; clc; close all;
-%propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
-propNames = ["LOX/RP1" "Storables"];
+propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
+%propNames = ["LOX/LH2" "Solid" ""];
 Propellantstage1 = "LOX/LH2"; % user changed
 
 h = 4; % meters, we decided as a team vote
 chi1 = 0.54 ; % min mass soln
 chi2 = 0.53 ; % min cost soln
 delta = 0.08;
+%tolarence 0.05 for mass margin
 
 vehicleParamsSize = 7; % if you add a vehicleParam later, change this number
 allOptimizedVehicles = zeros(length(propNames)*2,vehicleParamsSize);
@@ -16,15 +17,19 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
     firstIteration = true;
     mass_margin = 0;
 
-    while mass_margin < 0.3      % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
+    while mass_margin < 0.3 || mass_margin > 0.31    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
         
         if ~ firstIteration 
-            delta = delta + 0.01;  
+            if mass_margin < 0.3
+                delta = delta + 0.0001; 
+            elseif mass_margin > 0.31
+                delta = delta - 0.0001;
+            end
         else
             firstIteration = false;
         end
         
-        Propellants = [Propellantstage1, propNames(k)]     % user's specific propellant combination
+        Propellants = [Propellantstage1, propNames(k)];     % user's specific propellant combination
         [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min] = submission1 (delta, Propellantstage1, propNames(k)); % Grab submission 1 masses
 
         vehicle_inertMass1 = Min1_min + Min2_min;
@@ -41,8 +46,10 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
             stage = i;
             [nEngines, diameter_ofthrust] = EngineDimension(stage, m0(stage), Propellants(stage));  % find number of engines and diameter of all those engines
             radius = diameter_ofthrust/2;
+          
+           
  
-            [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(stage));     % function to find height of tank
+            [height, fuelh, h_oxidizer, ratio, rho,radius] = findTankHeight(Mpr0(i),radius, Propellants(stage));     % function to find height of tank
             min_radius = Inf;   % intializing variable, high number
             min_height = Inf;
             minInertmass = Inf; % intializing variable, high number
@@ -51,10 +58,10 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         
             while radius < height  % constraint
                 radius = radius + 0.1; % keep increasing radius until constraint is met
-                Mpr0(i)
-                radius
-                Propellants(i)
-                [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(i))  % new height based on new radius
+               
+               
+              
+                [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(i));  % new height based on new radius
                 L = height;
                 D = radius*2;
             
@@ -90,7 +97,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
             vehicle_inertMass2 = minInertmass + vehicle_inertMass2;      % add the inert masses
             previous_stage = minstageArray;
             
-            vehicleParams(stage,:) = [minEngines min_radius min_height minInertmass Mpr0(stage) m0(stage) thrust_weight_ratio(stage)]
+            vehicleParams(stage,:) = [minEngines min_radius min_height minInertmass Mpr0(stage) m0(stage) thrust_weight_ratio(stage)];
             
         end
         

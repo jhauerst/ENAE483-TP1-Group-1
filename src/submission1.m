@@ -14,11 +14,13 @@ for i = 1:length(propNames) %run through all propellant names
          Isp2 = Isp(i);
     end
 end
+
     [M01_array, M02_array, ~] = getMass(delta_v,m_pl,delta,chi,Isp1,Isp2); %getting stage mass for all chi values
     [m_pr1, m_pr2] = propMass(delta, M01_array, M02_array, m_pl); %propellant mass for both stages
     [m_in1, m_in2] = inertMass(delta, M01_array, M02_array); %inert mass for both stages
     Mo = M01_array + M02_array; %total initial mass
     %calculate stage cost based on intert mass
+
     costS1 = stageCost(m_in1);
     costS2 = stageCost(m_in2);
     costTotal = costS1 + costS2;
@@ -32,5 +34,4 @@ end
     Mo2_min = M02_array(cIndex);
     Mpr1_min = m_pr1(cIndex);
     Mpr2_min = m_pr2(cIndex);
-    
 end

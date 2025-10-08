@@ -1,6 +1,5 @@
-function [radius_ofthrust] = RocketDiameter (nEngines,diameter)
+function [radius_ofthrust] = RocketDiameter(nEngines,diameter)
 radius = diameter/2;
-
 % curve fit of first 20 known solutions for packing a circle in a circle
 a = 1.486;
 b = 0.4277;
