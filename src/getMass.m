@@ -16,43 +16,24 @@ function [M01_array, M02_array, chi_array] = getMass(delta_v,m_pl,delta,chi,Isp1
     M02_array = [];
     M01_array = [];
     chi_array = [];
+    g = 9.81/1000;%km/s^2
 
     for k = 1:length(chi)
-        g = 9.81/1000;%km/s^2
         %Rocket equation for stage two
         eqn2 = -Isp2*g*log((m_pl+delta*M02) / M02) - (1-chi(k))*delta_v == 0;
-        soln2 = vpasolve(eqn2,M02); %Use vpa solver to find M02
+        eqn1 = -Isp1*g*log((M02+delta*(M01+M02)) / (M02+M01)) - chi(k)*delta_v == 0;
+        soln = vpasolve([eqn1, eqn2],[M01, M02]); %Use vpa solver to find M02
+
         %The below loop excludes mass values that are negative and
-        %populates the matrices for second stage
-        if soln2 > 0 %
+        %populates the matrices for both stages
+        if (soln.M02 > 0 && soln.M01 > 0)%
             try 
-                M02_array(end+1) = double(soln2); %Store mass values
+                M02_array(end+1) = double(soln.M02); %Store mass values
+                M01_array(end+1) = double(soln.M01); %Store mass values
                 chi_array(end+1) = [chi(k)]; %Store corresponding chi values
             catch
             end
         end
-    end
-
-    %Repeat same steps but for first stage
-    for k = 1:length(chi_array) 
-        g = 9.81/1000; %km/s^2
-        %Rocket equation for stage one
-        eqn1 = -Isp1*g*log((M02_array(k)+delta*M01) / (M02_array(k)+M01)) - chi_array(k)*delta_v == 0;
-        soln1 = vpasolve(eqn1,M01);
-        if soln1 > 0
-            try 
-                M01_array(end+1) = double(soln1); %Store mass values
-            catch
-            end
-        end
-    end
-    %The below loop scales the chi array to the mass array with lower length 
-    if length(M02_array) > length(M01_array)
-        chi_array = chi_array(1:length(M01_array));%Scale chi to M01
-        M02_array = M02_array(1:length(M01_array));%Scale M02 to M01
-    elseif length(M01_array) > length(M02_array)
-        chi_array = chi_array(1:length(M02_array));%Scale chi to M02
-        M01_array = M01_array(1:length(M02_array));%Scale M01 to M02
     end
 
 end

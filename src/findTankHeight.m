@@ -1,4 +1,6 @@
-function [h_total, fuel_height, oxidizer_height, ratio, rho] =findTankHeight(Mpr0,r, Propellant) 
+function [h_total, fuel_height, oxidizer_height, ratio, rho, r] =findTankHeight(Mpr0,r, Propellant)
+%Mpr0: Overall Propellant mass (kg)
+%r: 
     % Find height of the tank cylinder based on propellant mass and radius
 density = [71 1140 820 423 1680 1442 791]; % LH2 LOX RP-1 LCH4 APCP(solid) N2O4 UDMH
 % NOTE: propMass must include oxidizer first
@@ -33,10 +35,14 @@ heights = [];
     for i = 1:length(propMass)
         volume = findVolume(propMass(i),rho(i));
         %volume for cylinder with hemispherical caps
-        h = (3*volume-4*pi*(r^3)) / (3*pi*(r^2));
-        disp("here")
-        heights(end+1) = h
-        h_total = h+h_total;
+        %Replace formula below 
+        h = max((volume-4*(pi/3)*r^3) / (pi*r^2), 0);
+        if h == 0 
+            r = (3*volume/(4*pi))^(1/3);
+        end
+
+        heights(end+1) = h+2*r;
+        h_total = h+h_total+2*r;
     end
     if Propellant == "Solid"
         ratio = [0 1];

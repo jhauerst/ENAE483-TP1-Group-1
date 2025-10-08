@@ -7,8 +7,8 @@
 % 4 --> if i = 2 , propellant_name = "else" : totalMass2 = [payload2 Intertank2 fuel_tank2 oxidizer_tank2 insul_oxid2 insul_fuel2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
 
 clear; clc; close all;
-propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
-%propNames = ["LOX/LH2" "Solid" ""];
+%propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
+propNames = ["LOX/LH2"];
 Propellantstage1 = "LOX/LH2"; % user changed
 
 h = 4; % meters, we decided as a team vote
@@ -19,6 +19,7 @@ delta = 0.08;
 
 vehicleParamsSize = 7; % if you add a vehicleParam later, change this number
 allOptimizedVehicles = zeros(length(propNames)*2,vehicleParamsSize);
+massMargins = zeros(length(propNames),1);
 for k = 1:length(propNames)     % Going through all the propellant names/combinations
 
     firstIteration = true;
@@ -54,9 +55,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
             [nEngines, diameter_ofthrust] = EngineDimension(stage, m0(stage), Propellants(stage));  % find number of engines and diameter of all those engines
             radius = diameter_ofthrust/2;
           
-           
- 
-            [height, fuelh, h_oxidizer, ratio, rho,radius] = findTankHeight(Mpr0(i),radius, Propellants(stage));     % function to find height of tank
+            [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(stage));     % function to find height of tank
             min_radius = Inf;   % intializing variable, high number
             min_height = Inf;
             minInertmass = Inf; % intializing variable, high number
@@ -65,8 +64,6 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         
             while radius < height  % constraint
                 radius = radius + 0.1; % keep increasing radius until constraint is met
-               
-               
               
                 [height, fuelh, h_oxidizer, ratio, rho] = findTankHeight(Mpr0(i),radius, Propellants(i));  % new height based on new radius
                 L = height;
@@ -109,7 +106,8 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         end
         
         allOptimizedVehicles(2*k-1:2*k, :) = vehicleParams;
-        mass_margin = (vehicle_inertMass1 - vehicle_inertMass2)/(vehicle_inertMass2)  % calculate the mass margin
+        mass_margin = (vehicle_inertMass1 - vehicle_inertMass2)/(vehicle_inertMass2);  % calculate the mass margin
+        massMargins(k) = mass_margin
     
     end % end of while loop 
 
@@ -119,7 +117,7 @@ for k=1:(length(allOptimizedVehicles(:,1))/2)
     disp(Propellantstage1 + ", " + propNames(k))
     for l=0:1
         index = 2*k+l-1;
-    fprintf("Stage: %d \tEngines: %d \tRadius: %f \tHeight: %f \tInert Mass: %d \t\nPropellant Mass: %d \tInitial Stage Mass: %d \tTWR: %d\n\n", ...
+    fprintf("Stage: %d \tEngines: %d \tRadius: %f \tHeight: %f \tInert Mass: %d \t\nPropellant Mass: %d \tInitial Stage Mass: %d \tTWR: %d \tMass Margin: %d\n\n", ...
         l+1, ...
         allOptimizedVehicles(index, 1), ...
         allOptimizedVehicles(index, 2), ...
@@ -127,6 +125,9 @@ for k=1:(length(allOptimizedVehicles(:,1))/2)
         allOptimizedVehicles(index, 4), ...
         allOptimizedVehicles(index, 5), ...
         allOptimizedVehicles(index, 6), ...
-        allOptimizedVehicles(index, 7))
+        allOptimizedVehicles(index, 7), ...
+        massMargins(k))
     end
 end
+
+[InertMass, stage, propellant_names] = totalInertMass(stage1_array,stage2_array,Propellants(stage),m0(stage),h,stage);
