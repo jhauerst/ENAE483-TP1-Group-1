@@ -21,17 +21,17 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
     firstIteration = true;
     mass_margin = 0;
 
-    while mass_margin < 0.3 || mass_margin > 0.31    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
+    while mass_margin < 0.3 || mass_margin > 0.301    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
         
         if ~ firstIteration 
             if mass_margin < 0.3
                 %delta = delta + 0.0001;
                 % adaptive step
-                delta = delta + abs(mass_margin-0.3)/100;
-            elseif mass_margin > 0.31
+                delta = delta + max(abs(mass_margin-0.3)/100, 1e-5);
+            elseif mass_margin > 0.301
                 %delta = delta - 0.0001;
                 % adaptive step
-                delta = delta - abs(mass_margin-0.3)/100;
+                delta = delta - max(abs(mass_margin-0.3)/100, 1e-5);
             end
         else
             firstIteration = false;
@@ -161,7 +161,7 @@ for k=1:(length(allOptimizedVehicles(:,1))/2)
     inertMassSum = 0;
     costSum = 0;
 
-    fprintf("Propellants: %s %s", Propellantstage1, propNames(k))
+    fprintf("Propellants: %s %s\n\n", Propellantstage1, propNames(k))
 
 for stage=1:2
 
