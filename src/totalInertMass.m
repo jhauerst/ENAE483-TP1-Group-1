@@ -68,20 +68,20 @@ if i == 2
     if strcmp(names(6),"Solid")
         propellant_names = "Solid";
         %Fairing for solid propellants on second stage is payload fairing
-        [Payload2, ~ ,~ , ~, ~] = findFairingMass(0,stage2(2),h)
+        [Payload2, ~ ,~ , ~, ~] = findFairingMass(0,stage2(2),h);
         %Propellant mass = solid fuel
         solidM2 = stage2(5);
         %DENSITY OF SOLID PROPELLANT SHOULD BE STORED IN FUEL DENSITY
         solidV2 = findVolume(solidM2,stage2(8));
-        propellantTank2 = findTankMass(solidM2, names(6),solidV2)
+        propellantTank2 = findTankMass(solidM2, names(6),solidV2);
         %find Surface area of tanks
         solidA2 = 2*pi*stage2(2)*stage2(1) +4*pi*stage2(2)^2;
         %find insulation mass
-        insul_solid2 = findInsulationMass(solidA2,names(6))
+        insul_solid2 = findInsulationMass(solidA2,names(6));
         %find Engine, Casing & Gimbal masses
-        [engineMass2, structureMass2, gimbalsMass2] = stageEngineMass(stage2(10), stage2(5), stage2(11), names(6), stage2(12), 2)
+        [engineMass2, structureMass2, gimbalsMass2] = stageEngineMass(stage2(10), stage2(5), stage2(11), names(6), stage2(12), 2);
      
-        [wiringMass2,~] = findWiringa_AvionicsMass(stage2(10),(stage2(1)+13+h))
+        [wiringMass2,~] = findWiringa_AvionicsMass(stage2(10),(stage2(1)+13+h));
         %height = 2nd stage height + payload fairing height
         totalMass2 = [Payload2 propellantTank2 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
     else 

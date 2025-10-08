@@ -3,7 +3,7 @@
 clear; clc; close all;
 propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
 %propNames = ["LOX/LH2"];
-Propellantstage1 = "LOX/LH2"; % user changed
+Propellantstage1 = "LOX/LCH4"; % user changed
 
 h = 4; % meters, we decided as a team vote
 chi1 = 0.54 ; % min mass soln
@@ -21,13 +21,17 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
     firstIteration = true;
     mass_margin = 0;
 
-    while mass_margin < 0.3 || mass_margin > 0.45    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
+    while mass_margin < 0.3 || mass_margin > 0.31    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
         
         if ~ firstIteration 
             if mass_margin < 0.3
-                delta = delta + 0.0001; 
+                %delta = delta + 0.0001;
+                % adaptive step
+                delta = delta + abs(mass_margin-0.3)/100;
             elseif mass_margin > 0.31
-                delta = delta - 0.0001;
+                %delta = delta - 0.0001;
+                % adaptive step
+                delta = delta - abs(mass_margin-0.3)/100;
             end
         else
             firstIteration = false;
@@ -154,6 +158,10 @@ for k=1:(length(allOptimizedVehicles(:,1))/2)
     % Payload Fairing, Inter Tank Fairing S1, Inter Tank Fairing S2, Inter Stage Fairing, Aft Fairing
 
     S2Avionics = 0;
+    inertMassSum = 0;
+    costSum = 0;
+
+    fprintf("Propellants: %s %s", Propellantstage1, propNames(k))
 
 for stage=1:2
 
@@ -201,6 +209,9 @@ for stage=1:2
             S2Avionics, InertMass(10), ...
             InertMass(1), 0, 0, 0);
     end
+    cost = stageCost(sum(InertMass));
+    fprintf("Stage Cost: %d\n\n", cost);
+    costSum = costSum + cost;
 end
-
+    fprintf("Vehicle Cost: %d\n\n", costSum);
 end
