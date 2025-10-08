@@ -1,14 +1,8 @@
 %% Main Section Code for 2.1
 
-% Array guide for subsystem masses: 
-% 1 --> if i = 1 , propellant_name = "Solid" : totalMass1 = [Interstage Aft1 propellantTank insul_solid engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1];
-% 2 --> if i = 1 , propellant_name = "else" : totalMass1 = [Intertank1 Interstage Aft1 fuel_tank1 oxidizer_tank1 insul_oxid1 insul_fuel1 engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1 ];
-% 3 --> if i = 2 , propellant_name = "Solid" : totalMass2 = [Payload2 propellantTank2 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
-% 4 --> if i = 2 , propellant_name = "else" : totalMass2 = [payload2 Intertank2 fuel_tank2 oxidizer_tank2 insul_oxid2 insul_fuel2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
-
 clear; clc; close all;
-%propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
-propNames = ["LOX/LH2"];
+propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
+%propNames = ["LOX/LH2"];
 Propellantstage1 = "LOX/LH2"; % user changed
 
 h = 4; % meters, we decided as a team vote
@@ -20,12 +14,14 @@ delta = 0.08;
 vehicleParamsSize = 7; % if you add a vehicleParam later, change this number
 allOptimizedVehicles = zeros(length(propNames)*2,vehicleParamsSize);
 massMargins = zeros(length(propNames),1);
+totalMasses = zeros(2,length(propNames));
+chiValues = zeros(length(propNames),1);
 for k = 1:length(propNames)     % Going through all the propellant names/combinations
 
     firstIteration = true;
     mass_margin = 0;
 
-    while mass_margin < 0.3 || mass_margin > 0.31    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
+    while mass_margin < 0.3 || mass_margin > 0.45    % This is to update the delta, if it is not the first iteration, until a mass margin of 30% is achieved
         
         if ~ firstIteration 
             if mass_margin < 0.3
@@ -38,10 +34,12 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         end
         
         Propellants = [Propellantstage1, propNames(k)];     % user's specific propellant combination
-        [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min] = submission1 (delta, Propellantstage1, propNames(k)); % Grab submission 1 masses
+        [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min, chi_min] = submission1 (delta, Propellantstage1, propNames(k)); % Grab submission 1 masses
+        chiValues(k) = chi_min;
 
         vehicle_inertMass1 = Min1_min + Min2_min;
         m0 = [Mo_min, Mo2_min];     % stage 1 and 2 array
+        totalMasses(:,k) = m0;
         Mpr0 = [Mpr1_min Mpr2_min]; % stage 1 and 2 array
         thrust_weight_ratio = [1.3 0.76];
         vehicle_inertMass2 = 0;
@@ -130,4 +128,79 @@ for k=1:(length(allOptimizedVehicles(:,1))/2)
     end
 end
 
-[InertMass, stage, propellant_names] = totalInertMass(stage1_array,stage2_array,Propellants(stage),m0(stage),h,stage);
+for k=1:(length(allOptimizedVehicles(:,1))/2)
+    index = 2*k-1;
+    nEngines = [allOptimizedVehicles(index, 1) allOptimizedVehicles(index+1, 1)];
+    radii = [allOptimizedVehicles(index, 2) allOptimizedVehicles(index+1, 2)];
+    heights = [allOptimizedVehicles(index, 3) allOptimizedVehicles(index+1, 3)];
+    
+    Mpr0 = [allOptimizedVehicles(index, 5) allOptimizedVehicles(index+1, 5)];
+    [height1, fuelh1, h_oxidizer1, ratio1, rho1] = findTankHeight(Mpr0(1),radii(1), Propellantstage1);  % new height based on new radius
+    [height2, fuelh2, h_oxidizer2, ratio2, rho2] = findTankHeight(Mpr0(2),radii(2), propNames(k));  % new height based on new radius]
+    fuel_heights = [fuelh1 fuelh2];
+    oxidizer_heights = [h_oxidizer1 h_oxidizer2];
+    ratios = [ratio1; ratio2];
+    rhos = [rho1; rho2];
+    thrust_weight_ratio = [1.3 0.76];
+    m0 = totalMasses(:,k);
+
+    stageArray1 = [heights(1), radii(1), fuel_heights(1), oxidizer_heights(1), Mpr0(1), ratios(2,1), ratios(1,1), rhos(2,1), rhos(1,1), m0(1), thrust_weight_ratio(1), nEngines(1)];
+    stageArray2 = [heights(2), radii(2), fuel_heights(2), oxidizer_heights(2), Mpr0(2), ratios(2,2), ratios(1,2), rhos(2,2), rhos(1,2), m0(2), thrust_weight_ratio(2), nEngines(2)];
+
+    % Need: Stage, Chi, Propellant, 
+    % Propellant Tanks S1, Propellant Tanks S2, Tank Insulation S1, Tank Insulation S2, 
+    % Engine S1, Engine S2, Thrust Structure S1, Thrust Structure S2, Casing S1, Casing S2, Gimbals S1, Gimbals S2, 
+    % Avionics (S2), Wiring S1, Wiring S2, 
+    % Payload Fairing, Inter Tank Fairing S1, Inter Tank Fairing S2, Inter Stage Fairing, Aft Fairing
+
+    S2Avionics = 0;
+
+for stage=1:2
+
+    [InertMass, ~, propellant_names] = totalInertMass(stage1_array,stage2_array,Propellants(stage),m0(stage),h,stage);
+
+    % Array guide for subsystem masses: 
+    % 1 --> if i = 1 , propellant_name = "Solid" : totalMass1 = [Interstage Aft1 propellantTank insul_solid engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1];
+    % 2 --> if i = 1 , propellant_name = "else" : totalMass1 = [Intertank1 Interstage Aft1 fuel_tank1 oxidizer_tank1 insul_oxid1 insul_fuel1 engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1 ];
+    % 3 --> if i = 2 , propellant_name = "Solid" : totalMass2 = [Payload2 propellantTank2 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
+    % 4 --> if i = 2 , propellant_name = "else" : totalMass2 = [payload2 Intertank2 fuel_tank2 oxidizer_tank2 insul_oxid2 insul_fuel2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
+    
+    displayString = "Stage: %d\tChi: %f\tPropellant: %d\n" + ...
+        "Propellant Tanks: %d\tTank Insulation: %d\t\n" + ...
+        "Engines: %d\tThrust Structure: %d\tCasing: %d\tGimbals: %d\t\n" + ...
+        "Avionics: %d\tWiring: %d\n" + ...
+        "Payload Fairing: %d\tIntertank Fairing: %d\tInterstage Fairing: %d\tAft Fairing: %d\n\n";
+    if (stage == 1 && strcmp(propellant_names, "Solid"))
+        S2Avionics = InertMass(9);
+        fprintf(displayString, ...
+            stage, chiValues(k), Mpr0(stage), ...
+            InertMass(3), InertMass(4), ...
+            0, InertMass(6), InertMass(5), InertMass(7), ...
+            0, InertMass(8), ...
+            0, 0, InertMass(1), InertMass(2));
+    elseif (stage == 1 && strcmp(propellant_names, "else"))
+        S2Avionics = InertMass(12);
+        fprintf(displayString, ...
+            stage, chiValues(k), Mpr0(stage), ...
+            InertMass(4)+InertMass(5), InertMass(6)+InertMass(7), ...
+            InertMass(8), InertMass(9), 0, InertMass(10), ...
+            0, InertMass(11), ...
+            0, InertMass(1), InertMass(2), InertMass(3));
+    elseif (stage == 2 && strcmp(propellant_names, "Solid"))
+        fprintf(displayString, ...
+            stage, chiValues(k), Mpr0(stage), ...
+            InertMass(2), InertMass(3), ...
+            0, InertMass(5), InertMass(4), InertMass(6), ...
+            S2Avionics, InertMass(7), ...
+            InertMass(1), 0, 0, 0);
+    elseif (stage == 2 && strcmp(propellant_names, "else"))
+        fprintf(displayString, ...
+            stage, chiValues(k), Mpr0(stage), ...
+            InertMass(3)+InertMass(4), InertMass(5)+InertMass(6), ...
+            InertMass(7), InertMass(8), 0, InertMass(9), ...
+            S2Avionics, InertMass(10), ...
+            InertMass(1), 0, 0, 0);
+    end
+end
+
+end
