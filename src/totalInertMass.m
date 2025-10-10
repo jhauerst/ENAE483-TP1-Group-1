@@ -28,7 +28,7 @@ function [InertMass, i, propellant_names]=totalInertMass(stage1,stage2,propellan
         solidV = findVolume(solidM,stage1(8));
         propellantTank = findTankMass(solidM, names(3),solidV);
         %find Surface area of tanks
-        solidA = 2*pi*stage1(2)*stage1(1) +4*pi*stage1(2)^2;
+        solidA = 2*pi*stage1(2)*stage1(1)+4*pi*stage1(2)^2;
         %find insulation mass
         insul_solid = findInsulationMass(solidA,names(3));
         %find Engine, Casing & Gimbal masses
@@ -36,7 +36,7 @@ function [InertMass, i, propellant_names]=totalInertMass(stage1,stage2,propellan
         [~,avionicsMass1] = findWiringa_AvionicsMass(M0,stage2(1));
         [wiringMass1,~] = findWiringa_AvionicsMass(M0,stage1(1));
 %         totalMass1 = Interstage+Aft1+propellantTank+insul_solid+engineMass1+structureMass1+gimbalsMass1+wiringMass1+avionicsMass1;
-        totalMass1 = [Interstage Aft1 propellantTank insul_solid engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1];
+        totalMass1 = [Interstage Aft1 0 insul_solid engineMass1 structureMass1 gimbalsMass1 wiringMass1 avionicsMass1];
     else 
         propellant_names = "else";
         [~, Intertank1 ,~ , Interstage, Aft1] = findFairingMass(stage1(2),stage2(2),h);
@@ -83,7 +83,7 @@ if i == 2
      
         [wiringMass2,~] = findWiringa_AvionicsMass(stage2(10),(stage2(1)+13+h));
         %height = 2nd stage height + payload fairing height
-        totalMass2 = [Payload2 propellantTank2 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
+        totalMass2 = [Payload2 0 insul_solid2 engineMass2 structureMass2 gimbalsMass2 wiringMass2];
     else 
         propellant_names = "else";
         %Fairing mass
@@ -100,7 +100,7 @@ if i == 2
         %find Surface area of tanks
         Asurf_fuel2 = 2*pi*stage2(2)*stage2(3) +4*pi*stage2(2)^2;%surface area of fuel tank
         Asurf_oxidizer2 = 2*pi*stage2(2)*stage2(4) +4*pi*stage2(2)^2;%surface area of oxidizer tank
-        insul_fuel2 = findInsulationMass(Asurf_fuel2,names(4)); %insulaiton mass for fuel tank
+        insul_fuel2 = findInsulationMass(Asurf_fuel2,names(4)); %insulation mass for fuel tank
         insul_oxid2 = findInsulationMass(Asurf_oxidizer2,names(5)); %insulation mass for oxidizer tank
         % find Engine, Casing, & gimbal masses
         [engineMass2, structureMass2, gimbalsMass2] = stageEngineMass(stage2(10), stage2(5), stage2(11), names(6), stage2(12), 2);

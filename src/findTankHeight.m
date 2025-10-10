@@ -36,9 +36,14 @@ heights = [];
         volume = findVolume(propMass(i),rho(i));
         %volume for cylinder with hemispherical caps
         %Replace formula below 
-        h = max((volume-4*(pi/3)*r^3) / (pi*r^2), 0);
-        if h == 0 
-            r = (3*volume/(4*pi))^(1/3);
+        if Propellant == "Solid"
+            h = volume/(pi*r^2);
+            r = 0;
+        else
+            h = max((volume-4*(pi/3)*r^3) / (pi*r^2), 0);
+            if h == 0 
+                r = (3*volume/(4*pi))^(1/3);
+            end
         end
 
         heights(end+1) = h+2*r;
