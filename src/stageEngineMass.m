@@ -36,10 +36,10 @@ function [engineMass, structureMass, gimbalsMass] = stageEngineMass(m0, mProp, T
 
     if strcmp(type, "LOX/LH2") || strcmp(type, "LOX/LCH4") || strcmp(type, "LOX/RP1") || strcmp(type, "Storables")
         engineMass = 7.81*10^-4*TPerEngine + 3.37*10^-5*TPerEngine*sqrt(expanRatio) + 59;% Engine mass
+        engineMass = nEngine*engineMass;
     end
     if strcmp(type, "Solid")
         engineMass = 0.135*mProp;
     end
-    engineMass = nEngine*engineMass;
 
 end
