@@ -1,4 +1,5 @@
 function [m_pr1, m_pr2] = propMass(delta,M01,M02, m_pl)
+% All team members worked on this code
 % PROPMASS  Find the propellant masses from the total stage masses.
 %
 %   [m_pr1, m_pr2] = PROPMASS(delta, M01, M02, m_pl) Find propellant masses

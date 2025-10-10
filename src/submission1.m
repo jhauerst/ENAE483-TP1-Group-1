@@ -1,4 +1,5 @@
 function [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min,chi_min] = submission1 (delta, Propellantstage1, Propellantstage2, newChi)
+% Joseph and Emma mainly worked on this code
 % Givens
 delta_v = 12.3; % km/s
 m_pl = 26000; % kg

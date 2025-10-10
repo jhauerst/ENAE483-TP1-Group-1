@@ -1,9 +1,10 @@
 %% Main Section Code for 2.1
+% All team members worked on this code
 
 clear; clc; close all;
 propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
 %propNames = ["LOX/LH2"];
-Propellantstage1 = "LOX/LCH4"; % user changed
+Propellantstage1 = "Storables"; % user changed
 
 h = 4; % meters, we decided as a team vote
 delta = 0.08;

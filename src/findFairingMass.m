@@ -1,5 +1,6 @@
 function [Payload, Intertank1 ,Intertank2 , Interstage, Aft] = findFairingMass(rs1, rs2,h)
 %% Call this function twice for each stage
+% Abdullah mainly worked on this code
 %rs1: Radius of 1st stage
 %rs2: Radius of 2nd stage 
 %h: height of aerodynamic cone

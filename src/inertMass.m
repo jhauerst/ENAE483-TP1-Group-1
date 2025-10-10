@@ -1,4 +1,5 @@
 function [m_in1, m_in2] = inertMass(delta, M01_array, M02_array)
+% Emma worked on this code
 % INERTMASS  Find the inert mass given the inert mass fraction and the stage masses.
 % 
 %   [m_in1, m_in2] = INERTMASS(delta, M01_array, M02_array) Finds the

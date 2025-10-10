@@ -1,4 +1,5 @@
-function [h_total, fuel_height, oxidizer_height, ratio, rho, r] =findTankHeight(Mpr0,r, Propellant)
+function [h_total, fuel_height, oxidizer_height, ratio, rho, r] =findTankHeight(Mpr0,r, Propellant) 
+% Abdullah Mahek Anderson mainly worked on this code
 %Mpr0: Overall Propellant mass (kg)
 %r: 
     % Find height of the tank cylinder based on propellant mass and radius

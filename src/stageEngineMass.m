@@ -1,4 +1,5 @@
 function [engineMass, structureMass, gimbalsMass] = stageEngineMass(m0, mProp, TWR, type, nEngine, stageNum)
+% Joseph mainly worked on this code
     %m0: total mass per stage (kg)
     %mprop: propellant mass per stage (kg)
     %TWR: thrust to weight ratio

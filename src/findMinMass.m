@@ -1,4 +1,5 @@
 function [mass, index] = findMinMass(Mos)
+% Joseph worked on this code
 % FINDMINMASS  Find the minimum mass given a list of total vehicle masses.
 %
 %   [mass, index] = FINDMINMASS(Mos) Finds the minimum mass in Mos.

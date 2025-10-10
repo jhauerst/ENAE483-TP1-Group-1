@@ -1,4 +1,5 @@
 %% FIND Mass of the Tank
+% Abdullah and Joseph mainly worked on this code
 function M_tank = findTankMass(Mpr,fuelname,Vpr)
     if strcmp(fuelname, "LOX") %LOX
         M_tank = 0.0107*Mpr;

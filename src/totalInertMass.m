@@ -1,4 +1,5 @@
 %% Array of givens
+% All team members worked on this code 
 %array = [1:stage height, 2:radius of stage, 3:height of fuel tank, 
 % 4:height of oxidizer tank, 5:Propellant mass, 6:fuel fraction, 
 % 7:oxidizer fraction, 8:fuel density, 9:oxidizer density, 10:initial mass
