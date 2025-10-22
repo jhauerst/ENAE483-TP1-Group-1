@@ -2,9 +2,9 @@
 % All team members worked on this code
 
 clear; clc; close all;
-propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
-%propNames = ["LOX/LH2"];
-Propellantstage1 = "Storables"; % user changed
+%propNames = ["LOX/LCH4" "LOX/LH2" "LOX/RP1" "Solid" "Storables"];
+propNames = ["LOX/LH2"];
+Propellantstage1 = "LOX/LCH4"; % user changed
 
 h = 4; % meters, we decided as a team vote
 delta = 0.08;
@@ -16,6 +16,9 @@ massMargins = zeros(length(propNames),1);
 totalMasses = zeros(2,length(propNames));
 chiValues = zeros(length(propNames),1);
 deltaValues = zeros(length(propNames),1);
+
+for r=0:1
+
 for k = 1:length(propNames)     % Going through all the propellant names/combinations
 
     firstIteration = true;
@@ -38,7 +41,7 @@ for k = 1:length(propNames)     % Going through all the propellant names/combina
         end
         
         Propellants = [Propellantstage1, propNames(k)];     % user's specific propellant combination
-        [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min, chi_min] = submission1 (delta, Propellantstage1, propNames(k), 0); % Grab submission 1 masses
+        [ Mo_min, Min1_min,Min2_min,Mo1_min, Mo2_min,Mpr1_min,Mpr2_min, chi_min] = submission1 (delta, Propellantstage1, propNames(k), r); % Grab submission 1 masses
         chiValues(k) = chi_min;
 
         vehicle_inertMass1 = Min1_min + Min2_min;
@@ -144,8 +147,8 @@ for k=1:(length(allOptimizedVehicles(:,1))/2)
     heights = [allOptimizedVehicles(index, 3) allOptimizedVehicles(index+1, 3)];
     
     Mpr0 = [allOptimizedVehicles(index, 5) allOptimizedVehicles(index+1, 5)];
-    [height1, fuelh1, h_oxidizer1, ratio1, rho1] = findTankHeight(Mpr0(1),radii(1), Propellantstage1);  % new height based on new radius
-    [height2, fuelh2, h_oxidizer2, ratio2, rho2] = findTankHeight(Mpr0(2),radii(2), propNames(k));  % new height based on new radius]
+    [height1, fuelh1, h_oxidizer1, ratio1, rho1] = findTankHeight(Mpr0(1),radii(1), Propellantstage1)  % new height based on new radius
+    [height2, fuelh2, h_oxidizer2, ratio2, rho2] = findTankHeight(Mpr0(2),radii(2), propNames(k))  % new height based on new radius]
     fuel_heights = [fuelh1 fuelh2];
     oxidizer_heights = [h_oxidizer1 h_oxidizer2];
     ratios = [ratio1; ratio2];
@@ -221,4 +224,6 @@ for stage=1:2
     costSum = costSum + cost;
 end
     fprintf("Vehicle Cost: %d\n\n", costSum);
+end
+
 end
